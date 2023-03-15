@@ -22,9 +22,7 @@ print("Max height recorded = ", + maxHeight)
 print("Avg height = ", + avgHeight)
 
 menIndex = data[:,0] == 1
-menData = np.array()
 print(menIndex)
 for i in range (0,len(data)):
     if data[i,0] == 1:
         menData[i] = data[i]
-print(menData)
