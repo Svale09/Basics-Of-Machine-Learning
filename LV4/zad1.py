@@ -40,4 +40,4 @@ y_train_n = scaler.fit_transform(y_train)
 #plt.show()
 
 linearModel = lm.LinearRegression()
-print(linearModel.fit(X_train_n, y_train))
+linearModel.fit(X_train_n, y_train)
