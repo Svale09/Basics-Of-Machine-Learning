@@ -13,6 +13,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import cross_val_score
 
 def plot_decision_regions(X, y, classifier, resolution=0.02):
     plt.figure()
@@ -43,11 +44,11 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
 
 
 # ucitaj podatke
-data = pd.read_csv("Social_Network_Ads.csv")
+data = pd.read_csv("/Users/ivansvalina/Documents/Faks/LV6/Social_Network_Ads.csv")
 print(data.info())
 
-data.hist()
-plt.show()
+#data.hist()
+#plt.show()
 
 # dataframe u numpy
 X = data[["Age","EstimatedSalary"]].to_numpy()
@@ -69,16 +70,82 @@ LogReg_model.fit(X_train_n, y_train)
 y_train_p = LogReg_model.predict(X_train_n)
 y_test_p = LogReg_model.predict(X_test_n)
 
-print("Logisticka regresija: ")
-print("Tocnost train: " + "{:0.3f}".format((accuracy_score(y_train, y_train_p))))
-print("Tocnost test: " + "{:0.3f}".format((accuracy_score(y_test, y_test_p))))
+#print("Logisticka regresija: ")
+#print("Tocnost train: " + "{:0.3f}".format((accuracy_score(y_train, y_train_p))))
+#print("Tocnost test: " + "{:0.3f}".format((accuracy_score(y_test, y_test_p))))
 
 # granica odluke pomocu logisticke regresije
-plot_decision_regions(X_train_n, y_train, classifier=LogReg_model)
+#plot_decision_regions(X_train_n, y_train, classifier=LogReg_model)
+#plt.xlabel('x_1')
+#plt.ylabel('x_2')
+#plt.legend(loc='upper left')
+#plt.title("Tocnost: " + "{:0.3f}".format((accuracy_score(y_train, y_train_p))))
+#plt.tight_layout()
+#plt.show()
+
+#model KNN 
+KNN_model = KNeighborsClassifier(n_neighbors = 5)
+KNN_model.fit(X_train_n, y_train)
+
+KNN_y_train_p = KNN_model.predict(X_train_n)
+KNN_y_test_p = KNN_model.predict(X_test_n)
+
+print("KNN:")
+print("Tocnost train: " + "{:0.3f}".format((accuracy_score(y_train, KNN_y_train_p))))
+print("Tocnost test: " + "{:0.3f}".format((accuracy_score(y_test, KNN_y_test_p))))
+
+plot_decision_regions(X_train_n, y_train, classifier=KNN_model)
 plt.xlabel('x_1')
 plt.ylabel('x_2')
 plt.legend(loc='upper left')
-plt.title("Tocnost: " + "{:0.3f}".format((accuracy_score(y_train, y_train_p))))
+plt.title("Tocnost: " + "{:0.3f}".format((accuracy_score(y_train, KNN_y_train_p))))
 plt.tight_layout()
 plt.show()
 
+#unakrsna validacija za knn
+k_range = list(range(1, 31))
+param_grid = dict(n_neighbors=k_range)
+svm_gscv = GridSearchCV(KNN_model, param_grid, cv=5, scoring='accuracy', n_jobs=-1)
+svm_gscv.fit(X_train , y_train)
+print(svm_gscv.best_params_) 
+print(svm_gscv.best_score_)
+print(svm_gscv.cv_results_)
+
+# #knn when k=1
+# KNN1_model = KNeighborsClassifier(n_neighbors = 1)
+# KNN1_model.fit(X_train_n, y_train)
+
+# KNN1_y_train_p = KNN1_model.predict(X_train_n)
+# KNN1_y_test_p = KNN1_model.predict(X_test_n)
+
+# print("KNN:")
+# print("Tocnost train: " + "{:0.3f}".format((accuracy_score(y_train, KNN1_y_train_p))))
+# print("Tocnost test: " + "{:0.3f}".format((accuracy_score(y_test, KNN1_y_test_p))))
+
+# plot_decision_regions(X_train_n, y_train, classifier=KNN1_model)
+# plt.xlabel('x_1')
+# plt.ylabel('x_2')
+# plt.legend(loc='upper left')
+# plt.title("Tocnost: " + "{:0.3f}".format((accuracy_score(y_train, KNN1_y_train_p))))
+# plt.tight_layout()
+# plt.show()
+
+
+# #knn when k=100
+# KNN100_model = KNeighborsClassifier(n_neighbors = 100)
+# KNN100_model.fit(X_train_n, y_train)
+
+# KNN100_y_train_p = KNN100_model.predict(X_train_n)
+# KNN100_y_test_p = KNN100_model.predict(X_test_n)
+
+# print("KNN:")
+# print("Tocnost train: " + "{:0.3f}".format((accuracy_score(y_train, KNN100_y_train_p))))
+# print("Tocnost test: " + "{:0.3f}".format((accuracy_score(y_test, KNN100_y_test_p))))
+
+# plot_decision_regions(X_train_n, y_train, classifier=KNN100_model)
+# plt.xlabel('x_1')
+# plt.ylabel('x_2')
+# plt.legend(loc='upper left')
+# # plt.title("Tocnost: " + "{:0.3f}".format((accuracy_score(y_train, KNN100_y_train_p))))
+# # plt.tight_layout()
+# # plt.show()
