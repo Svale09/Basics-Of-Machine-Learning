@@ -50,7 +50,7 @@ X = generate_data(500, flagc)
 # plt.title('podatkovni primjeri')
 # plt.show()
 
-km = KMeans(n_clusters=3, init='k-means++', n_init=5, random_state=0)
+km = KMeans(n_clusters=5, init='k-means++', n_init=5, random_state=0)
 km.fit(X)
 labels = km.predict(X)
 plt.figure()
