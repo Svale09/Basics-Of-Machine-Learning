@@ -40,16 +40,17 @@ print(test_images_s.shape[0], "test samples")
 train_labels_s = keras.utils.to_categorical(train_labels, num_classes)
 test_labels_s = keras.utils.to_categorical(test_labels, num_classes)
 
+#reshapeanje matrice sa slikama
+train_images_reshaped = train_images_s.reshape(60000,784)
+test_images_reshaped = test_images_s.reshape(10000,784)
 
 # TODO: kreiraj model pomocu keras.Sequential(); prikazi njegovu strukturu
 
-nnlmodel = keras.Sequential([
-    keras.layers.flatten(input_shape=(28,28)),
-    keras.layers.Dense(128, activation='relu'),
-    keras.layers.Dense(10,activation='softmax')
-    ])
-
-
+model = keras.Sequential()
+model.add(layers.Input(shape = (784,)))
+model.add(layers.Dense(50, activation = "relu"))
+model.add(layers.Dense(10,activation = "softmax"))
+model.summary()
 
 # TODO: definiraj karakteristike procesa ucenja pomocu .compile()
 
