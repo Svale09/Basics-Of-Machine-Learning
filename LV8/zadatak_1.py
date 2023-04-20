@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib as plt
 from tensorflow import keras
 from tensorflow.keras import layers
 from matplotlib import pyplot as plt
@@ -10,34 +11,43 @@ num_classes = 10
 input_shape = (28, 28, 1)
 
 # train i test podaci
-(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+(train_images, train_labels), (test_images, test_labels) = keras.datasets.mnist.load_data()
 
 # prikaz karakteristika train i test podataka
-print('Train: X=%s, y=%s' % (x_train.shape, y_train.shape))
-print('Test: X=%s, y=%s' % (x_test.shape, y_test.shape))
+print('Train: X=%s, y=%s' % (train_images.shape, train_labels.shape))
+print('Test: X=%s, y=%s' % (test_images.shape, test_labels.shape))
 
 # TODO: prikazi nekoliko slika iz train skupa
-
+plt.figure()
+plt.imshow(train_images[0])
+plt.title(train_labels[0])
+plt.show()
 
 # skaliranje slike na raspon [0,1]
-x_train_s = x_train.astype("float32") / 255
-x_test_s = x_test.astype("float32") / 255
+train_images_s = train_images.astype("float32") / 255
+test_images_s = test_images.astype("float32") / 255
 
 # slike trebaju biti (28, 28, 1)
-x_train_s = np.expand_dims(x_train_s, -1)
-x_test_s = np.expand_dims(x_test_s, -1)
+train_images_s = np.expand_dims(train_images_s, -1)
+test_images_s = np.expand_dims(test_images_s, -1)
 
-print("x_train shape:", x_train_s.shape)
-print(x_train_s.shape[0], "train samples")
-print(x_test_s.shape[0], "test samples")
+print("train_images shape:", train_images_s.shape)
+print(train_images_s.shape[0], "train samples")
+print(test_images_s.shape[0], "test samples")
 
 
 # pretvori labele
-y_train_s = keras.utils.to_categorical(y_train, num_classes)
-y_test_s = keras.utils.to_categorical(y_test, num_classes)
+train_labels_s = keras.utils.to_categorical(train_labels, num_classes)
+test_labels_s = keras.utils.to_categorical(test_labels, num_classes)
 
 
 # TODO: kreiraj model pomocu keras.Sequential(); prikazi njegovu strukturu
+
+nnlmodel = keras.Sequential([
+    keras.layers.flatten(input_shape=(28,28)),
+    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dense(10,activation='softmax')
+    ])
 
 
 
