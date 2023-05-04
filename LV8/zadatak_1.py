@@ -54,11 +54,17 @@ model.summary()
 
 # TODO: definiraj karakteristike procesa ucenja pomocu .compile()
 
-
+model.compile(loss = "categorical_crossentropy", optimizer = "adam", metrics = ["accuracy",])
 
 # TODO: provedi ucenje mreze
 
 
+batch_size = 32
+epochs = 20
+history = model.fit(train_images_reshaped, train_labels,
+                    batch_size = batch_size,
+                    epochs = epochs,
+                    validation_split = 0.1)
 
 # TODO: Prikazi test accuracy i matricu zabune
 
