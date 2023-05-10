@@ -112,3 +112,5 @@ plt.show()
 
 print(classification_report(y_test, y_test_predict))
 
+# f)
+#nakon dodavanja body_mass_g i bill_depth_mm u ulazne podatke, preciznost klasifikacije se povecala
