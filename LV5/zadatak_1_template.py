@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import matplotlib.colors as mcolors
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -17,6 +17,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 plt.scatter(X_train[:,0], X_train[:,1], s=3, c=y_train,cmap = "bwr")
 plt.scatter(X_test[:,0], X_test[:,1], c=y_test, marker="x", cmap="bwr")
+
 
 LogRegression_model = LogisticRegression()
 LogRegression_model.fit(X_train,y_train)
@@ -46,3 +47,11 @@ disp.plot()
 plt.show()
 
 print(classification_report(y_test, y_test_p))
+
+#Prikažite skup za testiranje u ravnini x1−x2. Zelenom bojom oznacite dobro klasificirane
+# primjere dok pogrešno klasificirane primjere oznacite crnom bojom.
+y_color = (y_test == y_test_p)
+plt.figure()
+plt.scatter(X_test[:, 0], X_test[:, 1], marker="o", c=y_color, s=15, cmap=mcolors.ListedColormap(["black", "green"]))
+print(y_color)
+plt.show()
