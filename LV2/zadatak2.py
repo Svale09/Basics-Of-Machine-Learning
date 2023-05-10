@@ -22,10 +22,11 @@ weight = data[:,2]
 # print("Avg height = ", + avgHeight)
 
 men = (data[:,0] == 1)
-female = (data[:,0] == 0)
+women = (data[:,0] == 0)
 
 print(men)
 print(min(data[men,1])) #kako ovo radi [men,1], men je lista koja sadrži je li index polja male ili ne znaci true false polje
 print(max(data[men,1]))
+print(np.mean(data[men,1]))
 
-
+#isto za women

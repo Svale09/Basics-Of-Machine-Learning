@@ -40,4 +40,4 @@ axes[3] = plt.imshow(rotatedImg, cmap="gray")
 mirroredImg = np.flip(img, axis= 1)
 
 axes[4] = plt.imshow(mirroredImg, cmap="gray")
-plt.show() # u sub plotovima iz nekog razloga 3 i 4 nisu prikazani
+plt.show() # u sub plotovima iz nekog razloga 3 i 4 nisu prikazani TO DO
