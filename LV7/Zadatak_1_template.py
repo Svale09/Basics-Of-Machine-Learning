@@ -50,9 +50,19 @@ X = generate_data(500, flagc)
 # plt.title('podatkovni primjeri')
 # plt.show()
 
-km = KMeans(n_clusters=5, init='k-means++', n_init=5, random_state=0)
-km.fit(X)
-labels = km.predict(X)
+# B.
+
+# inicijalizacija algoritma K srednjih vrijednosti
+km = KMeans ( n_clusters =3, init ='random' ,n_init =5, random_state =0)
+# pokretanje grupiranja primjera
+km. fit (X)
+# dodijeljivanje grupe svakom primjeru
+labels = km. predict (X)
+
+# prikazi primjere u obliku dijagrama rasprsenja
 plt.figure()
-plt.scatter(X[:,0],X[:,1], c=km.labels_.astype(float))
+plt.scatter(X[:,0],X[:,1],c=labels)
+plt.xlabel('$x_1$')
+plt.ylabel('$x_2$')
+plt.title('podatkovni primjeri')
 plt.show()

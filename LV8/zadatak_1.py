@@ -1,9 +1,9 @@
 import numpy as np
-import matplotlib as plt
 from tensorflow import keras
 from tensorflow.keras import layers
 from matplotlib import pyplot as plt
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
 
 
 # Model / data parameters
@@ -11,64 +11,87 @@ num_classes = 10
 input_shape = (28, 28, 1)
 
 # train i test podaci
-(train_images, train_labels), (test_images, test_labels) = keras.datasets.mnist.load_data()
+(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
 
 # prikaz karakteristika train i test podataka
-print('Train: X=%s, y=%s' % (train_images.shape, train_labels.shape))
-print('Test: X=%s, y=%s' % (test_images.shape, test_labels.shape))
+print('Train: X=%s, y=%s' % (x_train.shape, y_train.shape))
+print('Test: X=%s, y=%s' % (x_test.shape, y_test.shape))
 
 # TODO: prikazi nekoliko slika iz train skupa
-plt.figure()
-plt.imshow(train_images[0])
-plt.title(train_labels[0])
+plt.figure("Prva slika")
+plt.imshow(x_train[0], cmap='gray')
+plt.figure("Druga slika")
+plt.imshow(x_train[2], cmap='hot')
+plt.figure("Treca slika")
+plt.imshow(x_train[4], cmap='gray')
 plt.show()
+# ispis oznake u terminal
+print("Oznaka: ", y_train[2])
+
 
 # skaliranje slike na raspon [0,1]
-train_images_s = train_images.astype("float32") / 255
-test_images_s = test_images.astype("float32") / 255
+x_train_s = x_train.astype("float32") / 255
+x_test_s = x_test.astype("float32") / 255
 
 # slike trebaju biti (28, 28, 1)
-train_images_s = np.expand_dims(train_images_s, -1)
-test_images_s = np.expand_dims(test_images_s, -1)
+x_train_s = np.expand_dims(x_train_s, -1)
+x_test_s = np.expand_dims(x_test_s, -1)
 
-print("train_images shape:", train_images_s.shape)
-print(train_images_s.shape[0], "train samples")
-print(test_images_s.shape[0], "test samples")
+print("x_train shape:", x_train_s.shape)
+print(x_train_s.shape[0], "train samples")
+print(x_test_s.shape[0], "test samples")
 
 
 # pretvori labele
-train_labels_s = keras.utils.to_categorical(train_labels, num_classes)
-test_labels_s = keras.utils.to_categorical(test_labels, num_classes)
+y_train_s = keras.utils.to_categorical(y_train, num_classes)
+y_test_s = keras.utils.to_categorical(y_test, num_classes)
 
-#reshapeanje matrice sa slikama
-train_images_reshaped = train_images_s.reshape(60000,784)
-test_images_reshaped = test_images_s.reshape(10000,784)
 
 # TODO: kreiraj model pomocu keras.Sequential(); prikazi njegovu strukturu
+model = keras.Sequential(
+    [
+        layers.Flatten(input_shape=(28, 28, 1)),
+        layers.Dense(100, activation="relu"),
+        layers.Dense(50, activation="relu"),
+        layers.Dense(10, activation="softmax"),
+    ]
+)
 
-model = keras.Sequential()
-model.add(layers.Input(shape = (784,)))
-model.add(layers.Dense(50, activation = "relu"))
-model.add(layers.Dense(10,activation = "softmax"))
-model.summary()
+print(model.summary())
+
+
 
 # TODO: definiraj karakteristike procesa ucenja pomocu .compile()
 
-model.compile(loss = "categorical_crossentropy", optimizer = "adam", metrics = ["accuracy",])
+model.compile(
+    optimizer="adam",
+    loss="categorical_crossentropy",
+    metrics=["accuracy"],
+)
+
+
 
 # TODO: provedi ucenje mreze
 
+batch_size=32
+epochs=20
+history = model.fit(x_train_s,y_train_s,batch_size=batch_size,epochs=epochs,validation_split=0.1)
+predictions = model.predict(x_test_s)
+score = model.evaluate(x_test_s,y_test_s,verbose=0)
 
-batch_size = 32
-epochs = 20
-history = model.fit(train_images_reshaped, train_labels,
-                    batch_size = batch_size,
-                    epochs = epochs,
-                    validation_split = 0.1)
+predictions=np.argmax(predictions, axis=1) 
+y_test_s=np.argmax(y_test_s, axis=1) 
+
 
 # TODO: Prikazi test accuracy i matricu zabune
 
+cm=confusion_matrix(y_test_s, predictions)
 
+cm_display=ConfusionMatrixDisplay(cm)
+cm_display.plot()
+plt.show()
 
 # TODO: spremi model
 
+model.save("FCN/")
+del model

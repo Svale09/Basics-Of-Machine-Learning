@@ -51,3 +51,15 @@ plt.xlabel('k')
 plt.ylabel('Sum_of_squared_distances')
 plt.title('Elbow Method For Optimal k')
 plt.show()
+
+#7
+for i in range(clusters): 
+    bit_values = labels==[i]
+    binary_img = np.reshape(bit_values, (img.shape[0:2]))
+    binary_img = binary_img*1
+    x=int(i/2)
+    y=i%2
+
+plt.figure("Binary image")
+plt.imshow(binary_img)
+plt.show()
