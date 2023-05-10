@@ -66,7 +66,7 @@ temp.sort_values(by= "Fuel Consumption City (L/100km)", ascending= False)
 print(temp[["Make", "Model", "Fuel Consumption City (L/100km)"]].head(1))
 print("\n")
 
-print('Koliko ima vozila ima rucˇni tip mjenjacˇa (bez obzira na broj brzina)?')
+#Koliko ima vozila ima rucˇni tip mjenjacˇa (bez obzira na broj brzina)?')
 
 temp = data.Transmission == "M"
 print(len(temp))
