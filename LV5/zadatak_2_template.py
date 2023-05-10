@@ -3,6 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import classification_report
 
 labels= {0:'Adelie', 1:'Chinstrap', 2:'Gentoo'}
 
@@ -35,7 +38,7 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
                     label=labels[cl])
 
 # ucitaj podatke
-df = pd.read_csv("penguins.csv")
+df = pd.read_csv("LV5/penguins.csv")
 
 # izostale vrijednosti po stupcima
 print(df.isnull().sum())
@@ -58,11 +61,54 @@ output_variable = ['species']
 
 # ulazne velicine: bill length, flipper_length
 input_variables = ['bill_length_mm',
-                    'flipper_length_mm']
+                    'flipper_length_mm',
+                    'body_mass_g',
+                    'bill_depth_mm']
 
 X = df[input_variables].to_numpy()
 y = df[output_variable].to_numpy()
 
 # podjela train/test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 123)
+
+unique_train, counts_train = np.unique(y_train, return_counts=True)
+unique_test, counts_test = np.unique(y_test, return_counts=True)
+
+#a)
+
+plt.figure("Train")
+plt.bar(unique_train,counts_train,width=0.5)
+plt.title("Number of each species for a train data set ")
+plt.xlabel("species")
+plt.ylabel("count")
+# plt.show()
+
+plt.figure("Test")
+plt.bar(unique_test,counts_test,width=0.5)
+plt.title("Number of each species for a test data set ")
+plt.xlabel("species")
+plt.ylabel("count")
+# plt.show()
+
+# b)
+LogRegModel = LogisticRegression()
+LogRegModel.fit(X_train,y_train)
+
+# c)
+print(LogRegModel.intercept_)
+print(LogRegModel.coef_.T)
+
+# d)
+# plot_decision_regions(X=X_train, y= y_train.ravel(), classifier=LogRegModel)
+# plt.show()
+
+# e)
+y_test_predict = LogRegModel.predict(X_test)
+
+cm = confusion_matrix(y_test,y_test_predict)
+disp = ConfusionMatrixDisplay(cm)
+disp.plot()
+plt.show()
+
+print(classification_report(y_test, y_test_predict))
 
